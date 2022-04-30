@@ -1,4 +1,5 @@
-﻿bool sair = false;
+﻿using Tarefas.db;
+bool sair = false;
 while (!sair)
 {
     string opcao = UI.SelecionaOpcaoEmMenu();
@@ -30,13 +31,32 @@ while (!sair)
 void ListarTodasAsTarefas()
 {
     UI.ExibeDestaque("\n-- Listar todas as Tarefas ---");
-    // Continue daqui
+    using (var _db = new tarefasContext())
+    {
+        var tarefas = _db.Tarefa.ToList<Tarefa>();
+        Console.WriteLine($"{tarefas.Count()} tarefas encontradas.") ;
+        foreach (var tarefa in tarefas)
+        {
+            Console.WriteLine($"[{(tarefa.Concluida ? "X" : " ")}] # {tarefa.Id}: {tarefa.Descricao}");
+        }
+    }
 }
 
 void ListarTarefasPendentes()
 {
     UI.ExibeDestaque("\n-- Listar Tarefas Pendentes ---");
-    // Continue daqui
+     using (var _db = new tarefasContext())
+    {
+        var tarefas = _db.Tarefa
+        .Where(t => !t.Concluida)
+        .OrderByDescending (t => t.Id)
+        .ToList<Tarefa>();
+        Console.WriteLine($"{tarefas.Count()} tarefas encontradas.") ;
+        foreach (var tarefa in tarefas)
+        {
+            Console.WriteLine($"[{(tarefa.Concluida ? "X" : " ")}] # {tarefa.Id}: {tarefa.Descricao}");
+        }
+    }
 }
 
 void ListarTarefasPorDescricao()
