@@ -63,16 +63,34 @@ void ListarTarefasPorDescricao()
 {
     UI.ExibeDestaque("\n-- Listar Tarefas por Descrição ---");
     string descricao = UI.SelecionaDescricao();
-    // Continue daqui
-    Console.WriteLine(descricao);
+    using (var _db = new tarefasContext())
+    {
+        var tarefas = _db.Tarefa
+        .Where(t => t.Descricao.Contains(descricao))        
+        .ToList<Tarefa>();
+        Console.WriteLine($"{tarefas.Count()}tarefas(s) encontradas(s).");
+        foreach(var tarefa in tarefas)
+        {
+            Console.WriteLine($"[{(tarefa.Concluida ? "X" : " ")}] # {tarefa.Id}: {tarefa.Descricao}");
+        }
+    } 
 }
 
 void ListarTarefasPorId()
 {
     UI.ExibeDestaque("\n-- Listar Tarefas por Id ---");
     int id = UI.SelecionaId();
-    // Continue daqui
-    Console.WriteLine(id);
+    using(var _db = new tarefasContext())
+    {
+        var tarefa = _db.Tarefa.Find(id);
+        if (tarefa == null)
+        {
+            Console.WriteLine("Tarefa não encontrada.");
+            return;
+        }
+         Console.WriteLine($"[{(tarefa.Concluida ? "X" : " ")}] # {tarefa.Id} : {tarefa.Descricao} ");
+        
+    }
 }
 
 void IncluirNovaTarefa()
