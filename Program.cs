@@ -97,8 +97,22 @@ void IncluirNovaTarefa()
 {
     UI.ExibeDestaque("\n-- Incluir Nova Tarefa ---");
     string descricao = UI.SelecionaDescricao();
-    // Continue daqui
-    Console.WriteLine(descricao);
+    if (String.IsNullOrEmpty(descricao))
+    {
+        UI.ExibeErro("Não é possivel Incruir sem Descrição");
+        return;
+    }
+    using (var _db = new tarefasContext())
+    {
+        var tarefa = new Tarefa
+        {
+            Descricao = descricao
+        };
+        _db.Tarefa.Add(tarefa);
+        _db.SaveChanges();
+        Console.WriteLine($"[{(tarefa.Concluida ? "X" : " ")}] # {tarefa.Id} : {tarefa.Descricao} ");
+        
+    }
 }
 
 void AlterarDescricaoDaTarefa()
