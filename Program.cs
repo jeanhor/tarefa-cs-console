@@ -120,9 +120,26 @@ void AlterarDescricaoDaTarefa()
     UI.ExibeDestaque("\n-- Alterar Descrição da Tarefa ---");
     int id = UI.SelecionaId();
     string descricao = UI.SelecionaDescricao();
-    // Continue daqui
-    Console.WriteLine(id);
-    Console.WriteLine(descricao);
+  if (String.IsNullOrEmpty(descricao))
+    {
+        UI.ExibeErro("Não é permitido deixae uma Tarefa sem Descrição");
+        return;
+    }
+    using (var _db = new tarefasContext())
+    {
+        var tarefa = _db.Tarefa.Find(id);
+        if (tarefa==null)
+        {
+            Console.WriteLine("Tarefa não encontrada");
+            return;
+        }
+        tarefa.Descricao = descricao;
+        _db.SaveChanges();
+        
+        Console.WriteLine($"[{(tarefa.Concluida ? "X" : " ")}] # {tarefa.Id} : {tarefa.Descricao} ");
+
+
+    }    
 }
 
 void ConcluirTarefa()
