@@ -13,7 +13,7 @@ while (!sair)
         case "N": IncluirNovaTarefa(); break;
         case "A": AlterarDescricaoDaTarefa(); break;
         case "C": ConcluirTarefa(); break;
-        case "E": ExcluirTarefa(); break;
+        //case "E": ExcluirTarefa(); break;
 
         case "S":
             sair = true;
