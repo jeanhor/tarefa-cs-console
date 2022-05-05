@@ -13,7 +13,7 @@ while (!sair)
         case "N": IncluirNovaTarefa(); break;
         case "A": AlterarDescricaoDaTarefa(); break;
         case "C": ConcluirTarefa(); break;
-        case "E": ExcluirTarefa(); break;
+        //case "E": ExcluirTarefa(); break;
 
         case "S":
             sair = true;
@@ -146,8 +146,25 @@ void ConcluirTarefa()
 {
     UI.ExibeDestaque("\n-- Concluir Tarefa ---");
     int id = UI.SelecionaId();
-    // Continue daqui
-    Console.WriteLine(id);
+    using (var _db = new tarefasContext())
+    {
+        var tarefa = _db.Tarefa.Find(id);
+        if (tarefa==null)
+        {
+            Console.WriteLine("Tarefa não encontrada");
+            return;
+        }
+        if(tarefa.Concluida)
+        {
+            UI.ExibeErro(" Tarefa já concluida ");
+            return;
+        }
+        tarefa.Concluida = true;
+        _db.SaveChanges();
+        
+        Console.WriteLine($"[{(tarefa.Concluida ? "X" : " ")}] # {tarefa.Id} : {tarefa.Descricao} ");
+
+    
 }
 
 void ExcluirTarefa()
@@ -156,4 +173,5 @@ void ExcluirTarefa()
     int id = UI.SelecionaId();
     // Continue daqui
     Console.WriteLine(id);
+}
 }
